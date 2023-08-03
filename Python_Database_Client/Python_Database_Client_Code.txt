@@ -1,0 +1,65 @@
+!pip install mysql-connector-python
+
+# Import the MySQL Connector/Python
+import mysql.connector as connector
+
+# -------------- CHANGE THESE VALUES -------------------------
+
+HOST_NAME = "YOUR SERVER. Ex. LOCALHOST"    # Change this to use your own
+DB_USER = "YOUR USERNAME"                   # Change this to use your own
+DB_PASSWORD = "YOUR PASSWORD"               # Change this to use your own
+DB_NAME = "YOUR DATABASE NAME"              # Change this to use your own
+
+# ------------------------------------------------------------
+
+
+# Establish connection between Python and MySQL database via connector API
+connection=connector.connect(
+                             host=HOST_NAME, 
+                             user=DB_USER,     
+                             password=DB_PASSWORD, 
+                            )
+print("Connection between MySQL and Python is established.\n")
+
+# Create cursor object to communicate with entire MySQL database
+cursor = connection.cursor()
+print("Cursor is created to communicate with the MySQL using Python.\n")
+    
+# Set little_lemon database for use 
+cursor.execute("USE {}".format(DB_NAME))
+print("The database {} is set for use.\n".format(DB_NAME))
+
+# --------------------------------------------------------------
+
+show_tables_query = "SHOW tables" 
+cursor.execute(show_tables_query)
+
+result=cursor.fetchall()
+columns=cursor.column_names
+print("[",columns[0], "]")
+
+#Showing table names for Little Lemon Database
+for data in result:
+    print("-", data[0])
+    
+print("\n")
+
+# -------------------------------------------------------------
+
+OrdersGreaterThan_60 = """
+SELECT FullName, ContactNumber, Email 
+FROM Customers
+INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+WHERE Orders.TotalCost > 60
+"""
+
+print("-- Order Greater Than 60 Report --")
+cursor.execute(OrdersGreaterThan_60)
+result=cursor.fetchall()
+columns=cursor.column_names
+
+print(columns)
+
+#Showing Orders
+for data in result:
+    print (data)

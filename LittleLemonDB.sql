@@ -15,6 +15,18 @@ CREATE SCHEMA IF NOT EXISTS `LittleLemonDB` DEFAULT CHARACTER SET utf8 ;
 USE `LittleLemonDB` ;
 
 -- -----------------------------------------------------
+-- Table `LittleLemonDB`.`Customers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Customers` (
+  `CustomerID` INT NOT NULL AUTO_INCREMENT,
+  `FullName` VARCHAR(45) NOT NULL,
+  `ContactNumber` VARCHAR(45) NULL,
+  `Email` VARCHAR(45) NULL,
+  PRIMARY KEY (`CustomerID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `LittleLemonDB`.`Staff`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Staff` (
@@ -35,10 +47,16 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Bookings` (
   `BookingID` INT NOT NULL AUTO_INCREMENT,
   `TableNumber` INT NULL,
   `BookingDate` DATE NULL,
-  `BookingSlot` TIME NULL,
+  `CustomerID` INT NULL,
   `StaffID` INT NULL,
   PRIMARY KEY (`BookingID`),
+  INDEX `booking_fk_customer_idx` (`CustomerID` ASC) VISIBLE,
   INDEX `booking_fk_staff_idx` (`StaffID` ASC) VISIBLE,
+  CONSTRAINT `booking_fk_customer`
+    FOREIGN KEY (`CustomerID`)
+    REFERENCES `LittleLemonDB`.`Customers` (`CustomerID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `booking_fk_staff`
     FOREIGN KEY (`StaffID`)
     REFERENCES `LittleLemonDB`.`Staff` (`StaffID`)
@@ -74,18 +92,6 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Menus` (
     REFERENCES `LittleLemonDB`.`MenuItems` (`ItemID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`Customers`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Customers` (
-  `CustomerID` INT NOT NULL AUTO_INCREMENT,
-  `FullName` VARCHAR(45) NOT NULL,
-  `ContactNumber` VARCHAR(45) NULL,
-  `Email` VARCHAR(45) NULL,
-  PRIMARY KEY (`CustomerID`))
 ENGINE = InnoDB;
 
 
